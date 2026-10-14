@@ -2,11 +2,53 @@
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/public/favicon.svg"">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>fokus</title>
   </head>
-  <body>
+  <body class="page">
+    <a href="#main-content" class="skip-link">
+      Pular para o conteudo principal
+    </a>
+    <header>
+      <h1 class="logo">
+        <img src="/public/logo.png" alt="">
+      </h1>
+    </header>
+    <main id="main-content">
+      <section aria-label="Banner" alt="" class="banner">
+        <h2 class="banner__title">Otimize sua produtividade,
+          <strong class="banner__title--highlight">mergulhe no que importa.</strong></h2>
+          <img src="/mode-1.png" alt="" >
+      </section>
+
+      <section aria-label="time" class="timer-card">
+        <div hole="tabList" aria-label="tipo de timer" class="timer-card__tabs ">
+          <button role="tab"  ="button" aria-selected="true" class="timer-card__tab timer-card__tab--active">
+            Foco
+          </button>
+          <button role="tab"  ="button" aria-selected="false" class="timer-card__tab">
+            Descanso Curto
+          </button>
+          <button role="tab"  ="button" aria-selected="false" class="timer-card__tab">
+            Descanso Longo
+          </button>
+        </div>
+        <div class="timer-card__display">
+        <span role="timer" aria-live="polite" aria-label="Tempo restante" class="timer-card__time" >
+          00:25
+        </span>
+      </div>
+        <label for="toogle-music" class="music-toggle">
+          <input type="checkbox" id="toogle-music" class="music-toggle__input"> Musica
+        </label>
+        <form class="timer-card__form" >
+          <button class="button">
+            Comecar
+          </button> 
+         </form>
+      </section>
+    </main>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
