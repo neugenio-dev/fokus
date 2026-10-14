@@ -1,2 +1,2 @@
 import './style.css';
-import './assets/sounds.js'
+import './assets/scripts/sounds.js'
