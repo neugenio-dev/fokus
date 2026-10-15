@@ -1,5 +1,5 @@
 const FOCOS_TIME = 25 * 60;
-const SHORT_BREAK_TIME = 5 ;
+const SHORT_BREAK_TIME = 5 * 60 ;
 const LONG_BREAK_TIME = 15  * 60;
 
 const context = {
