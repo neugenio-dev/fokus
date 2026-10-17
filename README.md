@@ -1,2 +1,2 @@
 # fokus
-Trabalho Curso Alura
+Trabalho Curso FullStack - Alura
