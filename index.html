@@ -61,13 +61,13 @@
                     </summary>
                     <ul class="task-menu__list" role="menu">
                         <li class="task-menu__item" role="none">
-                            <button type="button" class="task-menu__button" role="menuitem">
+                            <button type="button" class="task-menu__button" id="btn-clear__completed" role="menuitem">
                                 <span class="icon icon--check icon--md" aria-hidden="true"></span>
                                 Limpar tarefas concluídas
                             </button>
                         </li>
                         <li class="task-menu__item" role="none">
-                            <button type="button" class="task-menu__button" role="menuitem">
+                            <button type="button" class="task-menu__button" id="btn-clear__all" role="menuitem">
                                 <span class="icon icon--delete icon--md" aria-hidden="true"></span>
                                 Limpar todas as tarefas
                             </button>
@@ -75,54 +75,19 @@
                     </ul>
                 </details>
             </div>
-            <ul class="task-list">
-                <li class="task-list__item task-list__item--complete">
-                    <button type="button" class="task-list__status" aria-pressed="true" aria-label="Marcar tarefa como pendente">
-                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <circle cx="12" cy="12" r="12" />
-                            <path d="M9 16.1719L19.5938 5.57812L21 6.98438L9 18.9844L3.42188 13.4062L4.82812 12L9 16.1719Z" />
-                        </svg>
-                    </button>
-                    <p class="task-list__description">Tarefa concluída</p>
-                    <button type="button" class="task-list__edit" aria-label="Editar tarefa">
-                        <span class="icon icon--edit icon--lg" aria-hidden="true"></span>
-                    </button>
-                </li>
-                <li class="task-list__item">
-                    <button type="button" class="task-list__status" aria-pressed="false" aria-label="Marcar tarefa como concluída">
-                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <circle cx="12" cy="12" r="12" />
-                            <path d="M9 16.1719L19.5938 5.57812L21 6.98438L9 18.9844L3.42188 13.4062L4.82812 12L9 16.1719Z" />
-                        </svg>
-                    </button>
-                    <p class="task-list__description">Tarefa pendente</p>
-                    <button type="button" class="task-list__edit" aria-label="Editar tarefa">
-                        <span class="icon icon--edit icon--lg" aria-hidden="true"></span>
-                    </button>
-                </li>
-                <li class="task-list__item">
-                    <button type="button" class="task-list__status" aria-pressed="false" aria-label="Marcar tarefa como concluída">
-                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <circle cx="12" cy="12" r="12" />
-                            <path d="M9 16.1719L19.5938 5.57812L21 6.98438L9 18.9844L3.42188 13.4062L4.82812 12L9 16.1719Z" />
-                        </svg>
-                    </button>
-                    <p class="task-list__description">Tarefa pendente</p>
-                    <button type="button" class="task-list__edit" aria-label="Editar tarefa">
-                        <span class="icon icon--edit icon--lg" aria-hidden="true"></span>
-                    </button>
-                </li>
-            </ul>
-            <form class="task-form">
+
+            <ul class="task-list"></ul>
+
+            <form class="task-form" hidden>
                 <label class="task-form__label" for="task-input">Adicionando tarefa</label>
                 <textarea class="task-form__textarea" id="task-input" name="task" required placeholder="No que você está trabalhando?"></textarea>
                 <div class="task-form__footer">
-                    <button type="button" class="task-form__button">
+                    <button type="button" class="task-form__button" hidden id="btn-delete">
                         <span class="icon icon--delete icon--sm" aria-hidden="true"></span>
                         Deletar
                     </button>
                     <span class="task-form__spacer"></span>
-                    <button type="button" class="task-form__button">
+                    <button type="button" class="task-form__button" id="btn-cancel">
                         <span class="icon icon--close icon--sm" aria-hidden="true"></span>
                         Cancelar
                     </button>
@@ -139,69 +104,9 @@
         </section>
     </main>
     <footer class="site-footer">
-        <p class="site-footer__text">Projeto fictício e sem fins comerciais. Imagens geradas por IA no Adobe Firefly. Desenvolvido por Alura.</p>
+        <p class="site-footer__text">Projeto Desenvolvido Durante Formação FullStack - Alura.</p>
     </footer>
     <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
-
-
-
-<!-- 
-
-
-<!doctype html>
-<html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/public/favicon.svg"">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fokus</title>
-  </head>
-  <body class="page" data-mode="1">
-    <a href="#main-content" class="skip-link">
-      Pular para o conteudo principal
-    </a>
-    <header>
-      <h1 class="logo">
-        <img src="/public/logo.png" alt=""  >
-      </h1>
-    </header>
-    <main id="main-content">
-      <section aria-label="Banner" alt="" class="banner">
-        <h2 class="banner__title">Otimize sua produtividade,
-          <strong class="banner__title--highlight">mergulhe no que importa.</strong></h2>
-          <img src="/mode-1.png" alt="" >
-      </section>
-
-      <section aria-label="time" class="timer-card">
-        <div hole="tabList" aria-label="tipo de timer" class="timer-card__tabs ">
-          <button role="tab" data-mode="1"  type="button" aria-selected="true" class="timer-card__tab timer-card__tab--active">
-            Foco
-          </button>
-          <button role="tab" data-mode="2" type="button" aria-selected="false" class="timer-card__tab">
-            Descanso Curto
-          </button>
-          <button role="tab" data-mode="3" type="button" aria-selected="false" class="timer-card__tab">
-            Descanso Longo
-          </button>
-        </div>
-        <div class="timer-card__display">
-        <span role="timer" aria-live="polite" aria-label="Tempo restante" class="timer-card__time" >
-          00:25
-        </span>
-      </div>
-        <label for="toogle-music" class="music-toggle">
-          <input type="checkbox" id="toggle-music" class="music-toggle__input"> Musica
-        </label>
-        <form class="timer-card__form" >
-          <button class="button">
-            Comecar
-          </button> 
-         </form>
-      </section>
-    </main>
-    <script type="module" src="/src/main.js"></script>
-  </body>
-</html> -->
