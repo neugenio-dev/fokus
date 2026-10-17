@@ -1,6 +1,6 @@
 # Fokus
 
-![Texto Alternativo da Imagem](./public/preview.png)
+![Imagem Preview Fokus](./public/preview.png)
 
 
 Timer **Pomodoro** com lista de tarefas, feito no curso de Full Stack da Alura, em **HTML, CSS e JavaScript vanilla**.
