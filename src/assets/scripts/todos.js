@@ -1,3 +1,7 @@
+let todosFromStorage = localStorage.getItem('todos')
+let todos = todosFromStorage ? JSON.parse(todosFromStorage) : []
+
+
 const form = document.querySelector('.task-form')
 const formLabel = document.querySelector('.task-form__label')
 const todoTextarea = document.querySelector('#task-input')
@@ -17,7 +21,7 @@ function tooggleForm(){
 }
 
 function resetFormState(){
-    form.reset
+    form.reset()
     formLabel.textContent = "Adicionando Tarefa"
     editingTodo = null
     buttonDeleteTask.hidden = true
@@ -40,23 +44,6 @@ buttonDeleteTask.addEventListener('click', () =>{
     renderAll()
 })
 
-let todos = [
-    {   
-        id: 1,
-        description: 'Estudar JS para Web',
-        completed: true
-    },
-    {
-        id: 2,
-        description: 'Estudar LLMs',
-        completed: false
-    },
-    {
-        id: 3,
-        description: 'Estudar Cursor',
-        completed: false
-    }
-]
 
 
 buttonClearCompleted.addEventListener('click', () =>{
@@ -161,6 +148,7 @@ function renderTodoListItem(todo){
 }
 
 function renderAll(){
+    localStorage.setItem('todos', JSON.stringify(todos))
     todosList.innerHTML = ''
  todos.forEach(todo => {
     const element = renderTodoListItem(todo)
