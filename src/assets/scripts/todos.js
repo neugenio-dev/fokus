@@ -1,159 +1,175 @@
 let todosFromStorage = localStorage.getItem('todos')
 let todos = todosFromStorage ? JSON.parse(todosFromStorage) : []
-
-
+const taskBoard = document.querySelector('.task-board')
 const form = document.querySelector('.task-form')
 const formLabel = document.querySelector('.task-form__label')
 const todoTextarea = document.querySelector('#task-input')
 const todosList = document.querySelector('.task-list')
-const buttonClearCompleted = document.querySelector('#btn-clear__completed')
-const buttonClearAll = document.querySelector('#btn-clear__all')
 const menu = document.querySelector('.task-menu')
 const buttonAddTask = document.querySelector('.add-task-button')
 const buttonDeleteTask = document.querySelector('#btn-delete')
-const buttonCancelAddTask  = document.querySelector('#btn-cancel')
 
 let editingTodo = null
 
-function tooggleForm(){
+function toggleForm() {
     form.hidden = !form.hidden
     buttonAddTask.hidden = !buttonAddTask.hidden
 }
 
-function resetFormState(){
+function resetFormState() {
     form.reset()
-    formLabel.textContent = "Adicionando Tarefa"
+    formLabel.textContent = 'Adicionando tarefa'
     editingTodo = null
     buttonDeleteTask.hidden = true
 }
 
-
-buttonAddTask.addEventListener('click', tooggleForm)
-buttonCancelAddTask.addEventListener('click', () =>{
-    tooggleForm()
+function handleCancelForm() {
+    toggleForm()
     resetFormState()
     form.reset()
-})
+}
 
-buttonDeleteTask.addEventListener('click', () =>{
-    if(editingTodo){
+function handleDeleteTodo() {
+    if (editingTodo) {
         todos = todos.filter(t => t !== editingTodo)
     }
     resetFormState()
-    tooggleForm()
+    toggleForm()
     renderAll()
-})
+}
 
+function handleClearCompleted() {
+    menu.open = false
+    todos = todos.filter(t => !t.completed)
+    renderAll()
+}
 
-
-buttonClearCompleted.addEventListener('click', () =>{
-menu.open = false
-todos = todos.filter(t => !t.completed)
-renderAll()
-})
-
-
-
-buttonClearAll.addEventListener('click', () =>{
+function handleClearAll() {
     menu.open = false
     todos = []
     todosList.innerHTML = ''
+}
+
+function findTodoFromEvent(event) {
+    const todoId = Number(event.target.closest('[data-todo-id]')?.dataset.todoId)
+    return todos.find(t => t.id === todoId)
+}
+
+function handleToggleStatus(event) {
+    const todo = findTodoFromEvent(event)
+    if (!todo) return
+
+    todo.completed = !todo.completed
+    renderAll()
+}
+
+function handleEditTodo(event) {
+    const todo = findTodoFromEvent(event)
+    if (!todo) return
+
+    if (form.hidden) {
+        toggleForm()
+    }
+    buttonDeleteTask.hidden = false
+    formLabel.textContent = 'Editando tarefa'
+    todoTextarea.value = todo.description
+    editingTodo = todo
+}
+
+const actions = {
+    'toggle-form': toggleForm,
+    'cancel-form': handleCancelForm,
+    'delete-todo': handleDeleteTodo,
+    'clear-completed': handleClearCompleted,
+    'clear-all': handleClearAll,
+    'toggle-status': handleToggleStatus,
+    'edit-todo': handleEditTodo,
+}
+
+taskBoard.addEventListener('click', (event) => {
+    const action = event.target.closest('[data-action]')?.dataset.action
+    if (action && actions[action]) {
+        actions[action](event)
+    }
 })
 
-
-
-form.addEventListener('submit', (event) =>{
-    event.preventDefault() 
+form.addEventListener('submit', (event) => {
+    event.preventDefault()
 
     const formData = new FormData(form)
 
-    if(editingTodo){
-      editingTodo.description   = formData.get('task')
-    }else{
-    const todo = {
-        id: Date.now(),
-        description: formData.get('task'),
-        completed: false
+    if (editingTodo) {
+        editingTodo.description = formData.get('task')
+    } else {
+        const todo = {
+            id: Date.now(),
+            description: formData.get('task'),
+            completed: false
+        }
+        todos.push(todo)
     }
-    todos.push(todo);
-}
 
     renderAll()
-    tooggleForm()
+    toggleForm()
     resetFormState()
 })
 
-
-function renderTodoListItem(todo){
-
+function renderTodoListItem(todo) {
     const listItem = document.createElement('li')
+
     listItem.classList.add('task-list__item')
-    if(todo.completed){
-        listItem.classList.add("task-list__item--complete")
+
+    if (todo.completed) {
+        listItem.classList.add('task-list__item--complete')
     }
 
     const statusButton = document.createElement('button')
-        statusButton.type = 'button'
+    statusButton.type = 'button'
+    statusButton.classList.add('task-list__status')
+    statusButton.dataset.action = 'toggle-status'
+    statusButton.dataset.todoId = todo.id
+    statusButton.setAttribute('aria-pressed', todo.completed)
 
-        statusButton.classList.add('task-list__status')
+    if (todo.completed) {
+        statusButton.setAttribute('aria-label', 'Marcar tarefa como concluída')
+    } else {
+        statusButton.setAttribute('aria-label', 'Marcar tarefa como pendente')
+    }
 
-        statusButton.setAttribute('aria-pressed', todo.completed)
+    const statusIcon = document.createElement('img')
+    statusIcon.src = todo.completed ? '/icons/check_circle.svg' : '/icons/check_circle_pending.svg'
 
-        statusButton.addEventListener('click', () =>{
-            todo.completed = !todo.completed
-            renderAll()
-        })
+    const paragraph = document.createElement('p')
+    paragraph.classList.add('task-list__description')
+    paragraph.textContent = todo.description
 
-        if(todo.completed){
-            statusButton.setAttribute('aria--label', 'Marcar tarefa como concluída')
+    const editButton = document.createElement('button')
+    editButton.type = 'button'
+    editButton.classList.add('task-list__edit')
+    editButton.dataset.action = 'edit-todo'
+    editButton.dataset.todoId = todo.id
+    editButton.setAttribute('aria-label', 'Editar tarefa')
 
-        }else{
-            statusButton.setAttribute('aria--label', 'Marcar tarefa como pendente')
-        }
+    const editIcon = document.createElement('span')
+    editIcon.classList.add('icon', 'icon--edit', 'icon--lg')
+    editIcon.setAttribute('aria-hidden', 'true')
+    editButton.appendChild(editIcon)
 
-        const statusIcon = document.createElement('img')
-        statusIcon.src = todo.completed ? '/public/icons/check_circle.svg': '/public/icons/check_circle_pending.svg'
+    statusButton.appendChild(statusIcon)
+    listItem.appendChild(statusButton)
+    listItem.appendChild(paragraph)
+    listItem.appendChild(editButton)
 
-        const paragraph = document.createElement('p')
-        paragraph.classList.add('task-list__description')
-        paragraph.textContent = todo.description
-
-        const editButton = document.createElement('button')
-        editButton.type = 'button'
-        editButton.classList.add('task-list__edit')
-        editButton.setAttribute('aria-label', 'Editar tarefa')
-
-        editButton.addEventListener('click', ()=>{
-          if(form.hidden){
-            tooggleForm()
-          }
-          buttonDeleteTask.hidden = false
-          formLabel.textContent = "Editando Tarefa"
-          todoTextarea.value = todo.description
-          editingTodo = todo
-          
-        })
-      
-        const editIcon = document.createElement('span')
-        editIcon.classList.add('icon', 'icon--edit', 'icon--lg') 
-        editIcon.setAttribute( 'aria-hidden', 'true')
-
-        statusButton.appendChild(statusIcon)
-        listItem.appendChild(statusButton)
-        listItem.appendChild(paragraph)
-        listItem.appendChild(editButton)
-        editButton.appendChild(editIcon)
-
-    return listItem;
+    return listItem
 }
 
-function renderAll(){
+function renderAll() {
     localStorage.setItem('todos', JSON.stringify(todos))
     todosList.innerHTML = ''
- todos.forEach(todo => {
-    const element = renderTodoListItem(todo)
-    todosList.appendChild(element); 
-
-})   
+    todos.forEach(todo => {
+        const element = renderTodoListItem(todo)
+        todosList.appendChild(element)
+    })
 }
+
 renderAll()
