@@ -1,48 +1,99 @@
 const form = document.querySelector('.task-form')
-
+const formLabel = document.querySelector('.task-form__label')
+const todoTextarea = document.querySelector('#task-input')
 const todosList = document.querySelector('.task-list')
+const buttonClearCompleted = document.querySelector('#btn-clear__completed')
+const buttonClearAll = document.querySelector('#btn-clear__all')
+const menu = document.querySelector('.task-menu')
+const buttonAddTask = document.querySelector('.add-task-button')
+const buttonDeleteTask = document.querySelector('#btn-delete')
+const buttonCancelAddTask  = document.querySelector('#btn-cancel')
 
+let editingTodo = null
 
-
-
-const todos = [
-{   
-    id: 1,
-    description: 'Estudar JS para Web',
-    completed: true
-},
-{
-    id: 2,
-    description: 'Estudar LLMs',
-    completed: false
-},
-{
-    id: 3,
-    description: 'Estudar Cursor',
-    completed: false
+function tooggleForm(){
+    form.hidden = !form.hidden
+    buttonAddTask.hidden = !buttonAddTask.hidden
 }
+
+function resetFormState(){
+    form.reset
+    formLabel.textContent = "Adicionando Tarefa"
+    editingTodo = null
+    buttonDeleteTask.hidden = true
+}
+
+
+buttonAddTask.addEventListener('click', tooggleForm)
+buttonCancelAddTask.addEventListener('click', () =>{
+    tooggleForm()
+    resetFormState()
+    form.reset()
+})
+
+buttonDeleteTask.addEventListener('click', () =>{
+    if(editingTodo){
+        todos = todos.filter(t => t !== editingTodo)
+    }
+    resetFormState()
+    tooggleForm()
+    renderAll()
+})
+
+let todos = [
+    {   
+        id: 1,
+        description: 'Estudar JS para Web',
+        completed: true
+    },
+    {
+        id: 2,
+        description: 'Estudar LLMs',
+        completed: false
+    },
+    {
+        id: 3,
+        description: 'Estudar Cursor',
+        completed: false
+    }
 ]
+
+
+buttonClearCompleted.addEventListener('click', () =>{
+menu.open = false
+todos = todos.filter(t => !t.completed)
+renderAll()
+})
+
+
+
+buttonClearAll.addEventListener('click', () =>{
+    menu.open = false
+    todos = []
+    todosList.innerHTML = ''
+})
+
+
 
 form.addEventListener('submit', (event) =>{
     event.preventDefault() 
-    console.log('Yes')
 
     const formData = new FormData(form)
-     
+
+    if(editingTodo){
+      editingTodo.description   = formData.get('task')
+    }else{
     const todo = {
         id: Date.now(),
         description: formData.get('task'),
         completed: false
     }
-
-    const li = renderTodoListItem(todo)
-
-    todosList.appendChild(li);
     todos.push(todo);
+}
 
-    form.reset();
-    console.log(todos)
-
+    renderAll()
+    tooggleForm()
+    resetFormState()
 })
 
 
@@ -56,8 +107,15 @@ function renderTodoListItem(todo){
 
     const statusButton = document.createElement('button')
         statusButton.type = 'button'
+
         statusButton.classList.add('task-list__status')
+
         statusButton.setAttribute('aria-pressed', todo.completed)
+
+        statusButton.addEventListener('click', () =>{
+            todo.completed = !todo.completed
+            renderAll()
+        })
 
         if(todo.completed){
             statusButton.setAttribute('aria--label', 'Marcar tarefa como concluída')
@@ -77,14 +135,21 @@ function renderTodoListItem(todo){
         editButton.type = 'button'
         editButton.classList.add('task-list__edit')
         editButton.setAttribute('aria-label', 'Editar tarefa')
+
+        editButton.addEventListener('click', ()=>{
+          if(form.hidden){
+            tooggleForm()
+          }
+          buttonDeleteTask.hidden = false
+          formLabel.textContent = "Editando Tarefa"
+          todoTextarea.value = todo.description
+          editingTodo = todo
+          
+        })
       
-       
-        
         const editIcon = document.createElement('span')
         editIcon.classList.add('icon', 'icon--edit', 'icon--lg') 
         editIcon.setAttribute( 'aria-hidden', 'true')
-
-
 
         statusButton.appendChild(statusIcon)
         listItem.appendChild(statusButton)
@@ -92,27 +157,15 @@ function renderTodoListItem(todo){
         listItem.appendChild(editButton)
         editButton.appendChild(editIcon)
 
-
-    
     return listItem;
-    // return`
-
-    //         <li class="task-list__item">
-    //             <button type="button" class="task-list__status" aria-pressed="false" aria-label="Marcar tarefa como concluída">
-    //                 <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    //                     <circle cx="12" cy="12" r="12" />                            <path d="M9 16.1719L19.5938 5.57812L21 6.98438L9 18.9844L3.42188 13.4062L4.82812 12L9 16.1719Z" />
-    //                     </svg>
-    //                 </button>
-    //              <p class="task-list__description">${todo.description}</p>
-    //             <button type="button" class="task-list__edit" aria-label="Editar tarefa">
-    //                 <span class="icon icon--edit icon--lg" aria-hidden="true"></span>
-    //                 </button>
-    //         </li>
-    // `
 }
 
-todos.forEach(todo => {
+function renderAll(){
+    todosList.innerHTML = ''
+ todos.forEach(todo => {
     const element = renderTodoListItem(todo)
     todosList.appendChild(element); 
 
-})
+})   
+}
+renderAll()

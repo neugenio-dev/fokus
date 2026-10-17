@@ -61,13 +61,13 @@
                     </summary>
                     <ul class="task-menu__list" role="menu">
                         <li class="task-menu__item" role="none">
-                            <button type="button" class="task-menu__button" role="menuitem">
+                            <button type="button" class="task-menu__button" id="btn-clear__completed" role="menuitem">
                                 <span class="icon icon--check icon--md" aria-hidden="true"></span>
                                 Limpar tarefas concluídas
                             </button>
                         </li>
                         <li class="task-menu__item" role="none">
-                            <button type="button" class="task-menu__button" role="menuitem">
+                            <button type="button" class="task-menu__button" id="btn-clear__all" role="menuitem">
                                 <span class="icon icon--delete icon--md" aria-hidden="true"></span>
                                 Limpar todas as tarefas
                             </button>
@@ -75,18 +75,19 @@
                     </ul>
                 </details>
             </div>
-            <ul class="task-list">
-            </ul>
-            <form class="task-form">
+
+            <ul class="task-list"></ul>
+
+            <form class="task-form" hidden>
                 <label class="task-form__label" for="task-input">Adicionando tarefa</label>
                 <textarea class="task-form__textarea" id="task-input" name="task" required placeholder="No que você está trabalhando?"></textarea>
                 <div class="task-form__footer">
-                    <button type="button" class="task-form__button">
+                    <button type="button" class="task-form__button" hidden id="btn-delete">
                         <span class="icon icon--delete icon--sm" aria-hidden="true"></span>
                         Deletar
                     </button>
                     <span class="task-form__spacer"></span>
-                    <button type="button" class="task-form__button">
+                    <button type="button" class="task-form__button" id="btn-cancel">
                         <span class="icon icon--close icon--sm" aria-hidden="true"></span>
                         Cancelar
                     </button>
